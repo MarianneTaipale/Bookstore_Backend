@@ -12,15 +12,23 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    public Book() {
+
+    }
+
+    public Book(String title, String author, int publicationYear, long isbn, double price) {
+        this.title = title;
+        this.author = author;
+        this.publicationYear = publicationYear;
+        this.isbn = isbn;
+        this.price = price;
+    }
+
     private String title;
     private String author;
     private int publicationYear;
-    private Long isbn;
+    private long isbn;
     private double price;
-
-    public Book(){
-
-    }
 
     public String getTitle() {
         return title;
@@ -68,5 +76,4 @@ public class Book {
                 + ", price=" + price + "]";
     }
 
-    
 }
