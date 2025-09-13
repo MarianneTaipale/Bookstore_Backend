@@ -16,8 +16,6 @@ public class Book {
 
     }
 
-
-    
     public Book(String title, String author, int publicationYear, long isbn, double price) {
         this.title = title;
         this.author = author;
