@@ -28,14 +28,14 @@ public class BookController {
         return "redirect:/booklist";
     }
 
-    @RequestMapping(value = "/add")
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String addBook(Model model){
         model.addAttribute("book", new Book());
         return "addbook";
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(Book book){
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String saveBook(Book book){
         repository.save(book);
         return "redirect:/booklist";
     }
