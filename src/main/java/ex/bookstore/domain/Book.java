@@ -8,9 +8,17 @@ import jakarta.persistence.Id;
 @Entity
 public class Book {
 
+    // attribuutit
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String title;
+    private String author;
+    private int publicationYear;
+    private long isbn;
+    private double price;
 
     public Book() {
 
@@ -23,12 +31,6 @@ public class Book {
         this.isbn = isbn;
         this.price = price;
     }
-
-    private String title;
-    private String author;
-    private int publicationYear;
-    private long isbn;
-    private double price;
 
     public String getTitle() {
         return title;
@@ -79,5 +81,5 @@ public class Book {
     public Long getId() {
         return id;
     }
-    
+
 }

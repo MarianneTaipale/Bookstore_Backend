@@ -3,6 +3,7 @@ package ex.bookstore.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,30 +14,57 @@ import ex.bookstore.domain.BookRepository;
 @Controller
 public class BookController {
 
-    @Autowired
+    // @Autowired
     private BookRepository repository;
+
+    public BookController(BookRepository repository) {
+        this.repository = repository;
+    }
 
     @RequestMapping("/booklist")
     public String bookList(Model model) {
-        model.addAttribute("books", repository.findAll());
+        model.addAttribute("books", repository.findAll()); // haetaan tietokannasta kirjat, SELECT
         return "booklist";
     }
 
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    public String deleteBook(@PathVariable("id") Long bookId, Model model) {
-        repository.deleteById(bookId);
+    // edit book tunnilla
+    @GetMapping("/editbook/{id}")
+    public String getEditBookForm(@PathVariable(name="id") Long id, Model model){
+        model.addAttribute("book", repository.findById(id));
+        return "editbook";
+    }
+
+    //edit book
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String currentBook(@PathVariable("id") Long bookId, Model model) {
+        repository.findAll();
         return "redirect:/booklist";
     }
 
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String editBook(Model model) {
+        model.addAttribute("edit", new Book());
+        return "editbook";
+    }
+
+    //delete book
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    public String deleteBook(@PathVariable("id") Long bookId) {
+        repository.deleteById(bookId); // SQL DELETE
+        return "redirect:/booklist";
+    }
+
+    //add book
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addBook(Model model){
+    public String addBook(Model model) {
         model.addAttribute("book", new Book());
         return "addbook";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String saveBook(Book book){
+    public String saveBook(Book book) {
         repository.save(book);
         return "redirect:/booklist";
     }
+
 }

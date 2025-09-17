@@ -27,6 +27,9 @@
                 <td>
                     <a th:href="@{/delete/{id}(id=${book.id})}">Delete</a>
                 </td>
+                <td>
+                    <a th:href="@{/editbook/{id}(id=${book.id})}">Edit</a>
+                </td>
             </tr>
             <a href="/add" class="btn btn-primary">Add</a>
         </tbody>
