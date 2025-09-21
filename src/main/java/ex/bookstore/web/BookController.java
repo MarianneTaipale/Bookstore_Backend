@@ -1,6 +1,5 @@
 package ex.bookstore.web;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import ex.bookstore.repos.CategoryRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,16 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ex.bookstore.domain.Book;
-import ex.bookstore.domain.BookRepository;
+import ex.bookstore.repos.BookRepository;
 
 @Controller
 public class BookController {
 
-    // @Autowired
+    private final CategoryRepository categoryRepository;
+    
+
     private BookRepository repository;
 
-    public BookController(BookRepository repository) {
+    public BookController(BookRepository repository, CategoryRepository categoryRepository) {
         this.repository = repository;
+        this.categoryRepository = categoryRepository;
     }
 
     @RequestMapping("/booklist")
@@ -29,12 +31,12 @@ public class BookController {
 
     // edit book tunnilla
     @GetMapping("/editbook/{id}")
-    public String getEditBookForm(@PathVariable(name="id") Long id, Model model){
+    public String getEditBookForm(@PathVariable(name = "id") Long id, Model model) {
         model.addAttribute("book", repository.findById(id));
         return "editbook";
     }
 
-    //edit book
+    // edit book
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String currentBook(@PathVariable("id") Long bookId, Model model) {
         repository.findAll();
@@ -47,17 +49,18 @@ public class BookController {
         return "editbook";
     }
 
-    //delete book
+    // delete book
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String deleteBook(@PathVariable("id") Long bookId) {
         repository.deleteById(bookId); // SQL DELETE
         return "redirect:/booklist";
     }
 
-    //add book
+    // add book
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String addBook(Model model) {
         model.addAttribute("book", new Book());
+        model.addAttribute("category", categoryRepository.findAll());
         return "addbook";
     }
 
@@ -66,5 +69,4 @@ public class BookController {
         repository.save(book);
         return "redirect:/booklist";
     }
-
 }
