@@ -33,10 +33,11 @@
                 <div style="clear: both; display: block; height: 10px;"></div>
 
                 <label for="category">Category</label>
-                <input type="text" id="category" th:field="*{category.name}" class="form-control" />
-                <div style="clear: both; display: block; height: 10px;"></div>
-
-                <input type="submit" class="btn btn-primary" value="Save"></input>
+                <select id="category" th:field="*{category}" class="form-control" />
+                <option th:each="categ : ${categories}" th:value="${categ.id}" th:text="${categ.name}">
+                </option>
+                </select>
+                <button type="submit" class="btn btn-primary" value="Save"></button>
             </form>
         </div>
 </body>
