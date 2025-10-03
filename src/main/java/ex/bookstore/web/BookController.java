@@ -2,6 +2,7 @@ package ex.bookstore.web;
 
 import ex.bookstore.repos.CategoryRepository;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +52,7 @@ public class BookController {
     }
 
     // delete book
+    @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String deleteBook(@PathVariable("id") Long bookId) {
         repository.deleteById(bookId); // SQL DELETE
