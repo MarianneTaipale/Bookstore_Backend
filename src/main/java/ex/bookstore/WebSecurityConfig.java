@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 import ex.bookstore.web.UserDetailServiceImpl;
 
@@ -17,7 +18,7 @@ public class WebSecurityConfig {
 
     private final UserDetailServiceImpl userDetailsService;
 
-    public WebSecurityConfig(UserDetailServiceImpl userDetailService){
+    public WebSecurityConfig(UserDetailServiceImpl userDetailService) {
         this.userDetailsService = userDetailService;
     }
 
@@ -26,7 +27,12 @@ public class WebSecurityConfig {
             throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().authenticated())
+                        .requestMatchers(toH2Console()).permitAll().anyRequest().authenticated())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(toH2Console()))
+                .headers(headers -> headers
+                        .frameOptions(frameoptions -> frameoptions
+                                .disable()))
                 .formLogin(formlogin -> formlogin
                         .loginPage("/login")
                         .defaultSuccessUrl("/booklist", true)
