@@ -1,17 +1,33 @@
-# Maven
-FROM maven:3.8.6-eclipse-temurin-17-focal AS build
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
+# Build-vaihe
+FROM eclipse-temurin:17-jdk-focal AS builder
 
-# JDK
-FROM eclipse-temurin:17-jre-focal
-WORKDIR /app
-# JAR buildistä
-COPY --from=build /app/target/StudentListSecureDB-0.0.1-SNAPSHOT.jar ./studentlistsecuredb.jar
+WORKDIR /opt/app
 
-ENV PORT 10000
-EXPOSE 10000
+# Kopioi Mavenin asetukset ja projektin metadata
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN chmod +x ./mvnw
 
-ENTRYPOINT ["java", "-jar", "studentlistsecuredb.jar"]
+# Lataa riippuvuudet
+RUN ./mvnw dependency:go-offline
+
+# Kopioi lähdekoodi
+COPY ./src ./src
+
+# Buildaa projekti
+RUN ./mvnw clean install -DskipTests
+
+# Kopioi JAR-tiedosto suoraan (ei käytetä find-komentoa)
+RUN cp target/*.jar /opt/app/app.jar
+
+# Runtime-vaihe
+FROM eclipse-temurin:17-jre-alpine
+
+WORKDIR /opt/app
+
+# Kopioi buildattu JAR-tiedosto
+COPY --from=builder /opt/app/app.jar /opt/app/app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/opt/app/app.jar"]
