@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 public class User {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
@@ -38,6 +38,8 @@ public class User {
     public User(){
 
     }
+
+    
 
     public String getUsername() {
         return username;
@@ -75,6 +77,14 @@ public class User {
     public String toString() {
         return "User [username=" + username + ", passwordHash=" + passwordHash + ", email=" + email + ", role=" + role
                 + "]";
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

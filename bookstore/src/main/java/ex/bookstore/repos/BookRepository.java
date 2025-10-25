@@ -11,5 +11,6 @@ import ex.bookstore.domain.Book;
 @RepositoryRestResource(path = "books")
 public interface BookRepository extends JpaRepository<Book, Long>{
     List<Book> findByPublicationYear(@Param("year")int publicationYear);
+    List<Book> findByTitle (@Param("title") String title);
     //perii mm. palvelut save, deleteById, findByID, findAll
 }
